@@ -9,11 +9,28 @@ export default function Dashboard() {
     });
 
     const [messages, setMessages] = useState([]);
+function formatData(data) {
+    return data.map((message) => {
+        return {
+            'message': message.message,
+            'user': {
+                'name': message.name
+            }
+        }
+    })
+}
+
     useEffect(() => {
+        fetch(route('messages.index')).then(res => res.json()).then((data) => setMessages(
+            formatData(
+                data
+        )
+        ));
+
         window.Echo.channel("messageChannel").listen("testEvent", (e) => {
-            console.log(e.user);
             setMessages((prev) => [...prev, e]);
         });
+        console.log(messages)
     }, []);
 
     function handleSubmit(e){
@@ -38,9 +55,9 @@ export default function Dashboard() {
                 <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
                     <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg">
                         <div className="p-6 text-gray-900">
-                            <div className="flex flex-col ">
+                            <div className="flex flex-col max-h-48 overflow-scroll">
                                 {messages.map((message, index) => (
-                                    <span key={index} className="flex row">
+                                    <span key={index} className="flex row ">
                                         <p>{message.user.name}:</p>                                    <div >
                                         {message.message}
                                     </div>

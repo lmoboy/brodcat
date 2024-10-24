@@ -11,6 +11,6 @@ class MessageController extends Controller
     {
         $message = $request->input('message');
         $user = Auth::user();
-        event(new testEvent($message, $user)); //broadcast(new testEvent($message, $user))->toOthers();
+        event(new testEvent($message, $user));
     }
 }
